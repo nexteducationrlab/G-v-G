@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Activity 1 - Rectangle to Cylinder</title>
+ 
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/leapstrap.css" />
+  
+     
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/leap.js"></script>
+	<script type="text/javascript" src="js/jsmodeler.js"></script>
+	<script type="text/javascript" src="js/three.min.js"></script>
+	<script type="text/javascript" src="js/jsmodeler.ext.three.js"></script>
+	<script type="text/javascript" src="js/gvg.js"></script>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="{{ page.base_url }}docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+<div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Geometry via Gestures</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          
+        </div><!--/.navbar-collapse -->
+    </div>
+<br><br>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-primary panel-leap">
+				<div class="panel-heading">
+					Activity 1
+				</div>
+				<div class="panel-body">
+					Use your hands to make this rectangle a cylinder.
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-8">
+			<div class="panel panel-primary panel-leap">
+				<div class="panel-body">
+				<p></p>
+			<p>
+			<!--The rectangle appears here -->
+			<canvas id="example" class="" width="600" height="350"></canvas>
+			
+			<!--   -->
+			<script>
+			(function(){
+				initialiseCanvas("example");
+				var rectangleBody=createRectangle();
+				AddBodyToViewer(rectangleBody);
+			})();
+			</script>
+				</div>
+			</div>
+	
+		</div>
+		<div class="col-md-4">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="progress progress-striped active">
+							  <div class="bar" id="progressBar" style="width: 0%;"></div>
+
+					</div>
+
+					<!--Hints appear here -->
+					<div class="panel panel-primary panel-leap">
+						<div class="panel-body" id="hintPanelBody">
+							
+						</div>
+						<div id="hintPanelFooter" style="display:none;" class="panel-footer" >
+						<div class="alert alert-leap alert-success alert-dismissable leap-interactive" leap-disable-tap="true">
+							<button type="button" class="close leap-interactive" data-dismiss="alert" aria-hidden="true">&times;</button> <strong>Well done!</strong>You can proceed to the next activity or do this activity again. 
+						</div>
+						<a class="btn btn-primary btn-lg leap-interactive" role="button" href="activity2.html">Proceed&raquo;</a>&nbsp;&nbsp;&nbsp;
+						<a class="btn btn-primary btn-lg leap-interactive" role="button" href="activity1.html">Restart</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<!--Assessments appear here -->
+					<div class="panel panel-primary panel-leap">
+					<br>
+						<div class="panel-body" id="questionPanelBody">
+							<button type="button" class="leap-click btn btn-primary btn-lg btn-block leap-interactive" id="hintButton" onclick="showGif();">Hint</button>       
+								<img id="gestureGif" style="display:none;" src="images/side_swipe.gif" width="300px" heigth="300px"></img>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div> <!-- /container -->
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="js/leapstrap.js"></script>
+<script>
+LeapManager.init({
+enableMetaGestures: false,
+enableDefaultMetaGestureActions: false,
+maxCursors:1,
+enableHoverTap: true,
+enablePressDown: true,
+enableScrollbarScrolling: true,
+});
+
+var controllerOptions = {enableGestures: true};
+var x=1;
+var y=2;
+var height=0;
+var z=10;
+hintGeneration(0);
+var firstTime=true;
+// Stack or unstack operations
+Leap.loop(controllerOptions, function(frame) {
+    if(firstTime && aligned(frame)){ // Initial hint - Bring your hand near the rectangle
+	$("#progressBar").css( "width", "20%" );
+	hintGeneration(1);
+	firstTime=false;
+    }
+  // Display Gesture object data
+  if (frame.gestures.length > 0) {
+    for (var i = 0; i < frame.gestures.length; i++) {
+      var gesture = frame.gestures[i];
+      if(gesture.type == "swipe") {
+          //Classify swipe as either horizontal or vertical
+          var isHorizontal = Math.abs(gesture.direction[0]) > Math.abs(gesture.direction[1]);
+          //Classify as right-left or up-down
+          if(isHorizontal){
+              if(gesture.direction[0] <= 0){
+                  swipeDirection = "left";
+		  x+=0.05;
+		  //console.log(x);
+		  if(x>y){
+			  x=1;y=2;
+			  // function in gvg.js
+			  rotate("right");
+			  height+=1;
+			  $("#progressBar").css( "width", eval(20+height*10)+"%" );
+			  if((20+height*10)>=100){
+				hintGeneration(2);
+			  }
+			  console.log(height);
+		  }
+              } else {
+                  swipeDirection = "down";
+              }
+          } else { //vertical
+                                
+          }
+          //console.log(swipeDirection)
+       }
+     }
+  }
+
+});
+// This function is used to check if the hand is pointed with the object
+function aligned(frame){
+var interactionBox = frame.interactionBox;
+if(frame.pointables.length > 0){
+
+        //Leap coordinates
+        var tipPosition = frame.pointables[0].tipPosition;
+        
+        //Normalized coordinates
+        var normalizedPosition = interactionBox.normalizePoint(tipPosition, true);
+        
+        //Pixel coordinates in current window
+        var windowPosition = [normalizedPosition[0] * window.innerWidth, 
+                              window.innerHeight - (normalizedPosition[1] * window.innerHeight), 
+                              0];
+	if(windowPosition[0]>=300 && windowPosition[0]<=600  && windowPosition[1]>=10 && windowPosition[1]<=300)
+	    //console.log(vectorToString(windowPosition, 0));        
+		return true;
+	else 
+		return false;
+}
+
+}
+
+function vectorToString(vector, digits) {
+  if (typeof digits === "undefined") {
+    digits = 1;
+  }
+  return "(" + vector[0].toFixed(digits) + ", "
+             + vector[1].toFixed(digits) + ", "
+             + vector[2].toFixed(digits) + ")";
+}
+
+// Based on the level of the progress bar, the type of hints change 
+function hintGeneration(level){
+var html="";
+switch(level){
+	case 0:
+		html="Move your hand to the rectangle";
+		break;
+	case 1:
+		html="Use the gesture shown below to make this rectangle a cylinder.";
+		break;
+	case 2:
+		html="Well done! You have completed this activity";
+		$("#hintPanelFooter").show();
+		$("#example").addClass("leap-interactive");
+}
+$("#hintPanelBody").html(html);		
+}
+
+function showGif(){
+	$("#hintButton").hide();
+	$("#gestureGif").show();
+
+}
+</script>
+  </body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Leap Web Site</title>
+ 	<!-- You should update these links to point to your local files! -->
+ 
+    <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="css/leapstrap.css" />
+    <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="http://wilkesalex.github.io/leapstrap/examples/leap-web-site/example.css" />
+  
+    <script src="js/jquery-3.0.0.min.js"></script>
+    <script src="js/leap.js"></script>
+	<script type="text/javascript" src="js/jsmodeler.js"></script>
+	<script type="text/javascript" src="js/three.min.js"></script>
+	<script type="text/javascript" src="js/jsmodeler.ext.three.js"></script>
+	<script type="text/javascript" src="js/gvg.js"></script>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="{{ page.base_url }}docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Geometry via Gestures</a>
+        </div>
+	</div>
+      </div>
+
+<br><br>
+<div class="container">
+<br>
+<div class="progress progress-striped active">
+		  <div class="bar" id="progressBar" style="width: 0%;"></div>
+
+</div>
+
+<div id="demo1">
+	<h2>Steps</h2>
+	<ol>
+	<li>Move your hand over the leap motion controller</li>
+	<li>You will be able to see a circle on the screen corresponding to your hand</li>
+	<li>Move the circle towards  the button</li>
+	</ol>
+		<div class="bs-example">
+			<div class="well" style="max-width: 400px; margin: 0 auto 10px;">
+			<button type="button" class="leap-click btn btn-primary btn-lg btn-block leap-interactive" id="demo1Button">Click Me!!</button>       
+			</div>
+
+		</div>
+</div>
+<div id="demo1After" style="display:none;">
+<div class="alert alert-leap alert-success alert-dismissable leap-interactive" leap-disable-tap="true">
+		<button type="button" class="close leap-interactive" data-dismiss="alert" aria-hidden="true">&times;</button> <a href="#" class="alert-link leap-interactive">Well done!! Move your hand over the button to proceed.</a> 
+	</div>
+	<button class="btn btn-primary btn-lg leap-interactive" data-toggle="modal" data-target="#demo2" id="demo2Proceed" >
+	 Proceed
+	</button>
+</div>
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal Demo 2-->
+<div id="demo2" style="display:none;" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+<div class="modal-content">
+
+          <div class="modal-header">
+             <button type="button" class="close leap-interactive" data-dismiss="modal" aria-hidden="true" leap-attractor="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">Basic Details Form</h4>
+          </div>
+          <div class="modal-body">
+            <p>Place your hand over the leap motion controller and navigate through the various fields in this form. You can use the keyboard to type in your responses</p>
+
+	<form class="form-horizontal">
+	  <div class="control-group">
+	    <label class="control-label" for="inputName">Name</label>
+	    <div class="controls">
+	      <input type="text" id="inputName" placeholder="Enter your name here" class="leap-interactive">
+	    </div>
+	  </div>
+	  <div class="control-group">
+	    <label class="control-label" for="inputClass">Studying in class</label>
+	    <div class="controls">
+	      <input type="text" id="inputClass" placeholder="Enter your class here" class="leap-interactive">
+	    </div>
+	  </div>
+	</form>
+          </div>
+          <div class="modal-footer">
+           <button type="button" class="btn btn-default leap-interactive" data-dismiss="modal" id="submitButton">Submit</button>
+          </div>
+
+        </div>
+<!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="demo3" style="display:none;" align="center">
+<div class="panel panel-primary panel-leap">
+<br>
+	<div class="panel-body" id="questionPanelBody">
+		Move the cylinder by using your hand
+	</div>
+</div>
+<canvas id="example" class="leap-interactive" width="500" height="300"></canvas>
+			
+
+<script>
+(function(){
+	initialiseCanvas("example","");
+	var cylinderBody = JSM.GenerateCylinder (0.5, 0.4,100,true, false);
+	AddBodyToViewer(cylinderBody);
+})();
+</script>
+
+<button type="button" class="btn btn-primary btn-lg btn-block leap-interactive" id="demo3ButtonProceed">Proceed</button>       
+</div>
+
+<div id="demo4" style="display:none;">
+<div class="jumbotron">
+      <div class="container" align="center">
+        <h1>Excellent!!</h1>
+        <p>You have successfully completed the demo. You can now proceed to the activities</p>
+        <p><a class="btn btn-primary btn-lg leap-interactive" role="button" href="activity1.html">Proceed to the Activity &raquo;</a></p>
+      </div>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="js/leapstrap.js"></script>
+<script>
+LeapManager.init({
+enableMetaGestures: true,
+enableDefaultMetaGestureActions: true,
+maxCursors:1,
+enableHoverTap: true,
+enablePressDown: true,
+enableScrollbarScrolling: true,
+});
+$("#demo1Button").click(function(){
+	$("#demo1").hide();
+	$("#demo1After").show();
+	$("#progressBar").css( "width", "30%" );
+});
+$("#demo2Proceed").click(function(){
+	$("#progressBar").css( "width", "50%" );
+});
+$("#submitButton").click(function(){
+	$("#demo1After").hide();
+	$("#demo3").show();
+	$("#progressBar").css( "width", "75%" );
+});
+
+$("#demo3ButtonProceed").click(function(){
+	$("#demo3").hide();
+	$("#demo4").show();
+	$("#progressBar").css( "width", "100%" );
+});
+
+$("#inputName").click(function(){
+  $("#inputName").focus();
+});
+
+$("#inputClass").click(function(){
+  $("#inputClass").focus();
+});
+</script>
+  </body>
+</html>
